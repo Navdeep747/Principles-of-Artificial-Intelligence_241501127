@@ -1,0 +1,32 @@
+import numpy as np
+import skfuzzy as fuzz
+import matplotlib.pyplot as plt
+
+
+temp = np.arange(0, 41, 1)
+fan = np.arange(0, 11, 1)
+
+
+temp_lo = fuzz.trimf(temp, [0, 0, 20])
+temp_md = fuzz.trimf(temp, [10, 20, 30])
+temp_hi = fuzz.trimf(temp, [20, 30, 40])
+
+fan_lo = fuzz.trimf(fan, [0, 0, 5])
+fan_md = fuzz.trimf(fan, [2, 5, 8])
+fan_hi = fuzz.trimf(fan, [5, 10, 10])
+
+
+t_input = 28
+lo = fuzz.interp_membership(temp, temp_lo, t_input)
+md = fuzz.interp_membership(temp, temp_md, t_input)
+hi = fuzz.interp_membership(temp, temp_hi, t_input)
+
+
+act_lo = np.fmin(lo, fan_lo)
+act_md = np.fmin(md, fan_md)
+act_hi = np.fmin(hi, fan_hi)
+agg = np.fmax(act_lo, np.fmax(act_md, act_hi))
+
+
+output = fuzz.defuzz(fan, agg, 'centroid')
+print(f"Temperature: {t_input}°C => Fan Speed: {output:.2f}")
