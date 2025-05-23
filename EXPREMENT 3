@@ -1,0 +1,73 @@
+PLAYER_X = 1
+PLAYER_O = -1
+EMPTY = 0
+
+def isWinningMove(board, player):
+    for row in range(3):
+        if board[row][0] == board[row][1] == player and board[row][2] == EMPTY:
+            return (row, 2)
+        if board[row][0] == board[row][2] == player and board[row][1] == EMPTY:
+            return (row, 1)
+        if board[row][1] == board[row][2] == player and board[row][0] == EMPTY:
+            return (row, 0)
+    
+    for col in range(3):
+        if board[0][col] == board[1][col] == player and board[2][col] == EMPTY:
+            return (2, col)
+        if board[0][col] == board[2][col] == player and board[1][col] == EMPTY:
+            return (1, col)
+        if board[1][col] == board[2][col] == player and board[0][col] == EMPTY:
+            return (0, col)
+    
+    if board[0][0] == board[1][1] == player and board[2][2] == EMPTY:
+        return (2, 2)
+    if board[0][0] == board[2][2] == player and board[1][1] == EMPTY:
+        return (1, 1)
+    if board[1][1] == board[2][2] == player and board[0][0] == EMPTY:
+        return (0, 0)
+
+    if board[0][2] == board[1][1] == player and board[2][0] == EMPTY:
+        return (2, 0)
+    if board[0][2] == board[2][0] == player and board[1][1] == EMPTY:
+        return (1, 1)
+    if board[1][1] == board[2][0] == player and board[0][2] == EMPTY:
+        return (0, 2)
+    
+    return None
+
+def findBestMoveRuleBased(board):
+    move = isWinningMove(board, PLAYER_X)
+    if move:
+        return move
+    move = isWinningMove(board, PLAYER_O)
+    if move:
+        return move
+    if board[1][1] == EMPTY:
+        return (1, 1)
+    for move in [(0,0), (0,2), (2,0), (2,2)]:
+        if board[move[0]][move[1]] == EMPTY:
+            return move
+    for move in [(0,1), (1,0), (1,2), (2,1)]:
+        if board[move[0]][move[1]] == EMPTY:
+            return move
+
+    return (-1, -1)  
+def printBoard(board):
+    for row in board:
+        print(" ".join(["X" if x == PLAYER_X else "O" if x == PLAYER_O else "." for x in row]))
+board = [
+    [PLAYER_X, PLAYER_O, PLAYER_X],
+    [PLAYER_O, PLAYER_X, EMPTY],
+    [EMPTY, PLAYER_O, PLAYER_X]
+]
+print("Current Board:")
+printBoard(board)
+
+move = findBestMoveRuleBased(board)
+print(f"\nBest Move (Rule-based): {move}")
+
+if move != (-1, -1):
+    board[move[0]][move[1]] = PLAYER_X
+
+print("\nBoard after best move:")
+printBoard(board)
