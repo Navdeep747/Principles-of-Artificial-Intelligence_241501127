@@ -1,0 +1,20 @@
+def add_edge(graph, u, v):
+    graph.setdefault(u, []).append(v)
+    graph.setdefault(v, []).append(u)
+
+def dfs(graph, node, visited):
+    print(node, end=" ")
+    visited.add(node)
+    for neighbor in graph.get(node, []):
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+
+graph = {}
+
+edges = [(0, 1), (0, 2), (1, 3), (1, 4), (2, 5)]
+for u, v in edges:
+    add_edge(graph, u, v)
+
+visited = set()
+print("DFS Traversal:")
+dfs(graph, 0, visited)
