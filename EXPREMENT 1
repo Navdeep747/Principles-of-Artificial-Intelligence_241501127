@@ -1,31 +1,10 @@
-N = 8  
-def print_solution(pos):
-    for row in range(N):
-        line = ["." for _ in range(N)]
-        line[pos[row]] = "Q"  
-        print(" ".join(line))
-    print("\n")
-
-def is_safe(pos, row, col):
-    for i in range(row):
-        if pos[i] == col or abs(pos[i] - col) == abs(i - row):
-            return False
-    return True
-
-def solve_n_queens(pos, row):
-    if row == N:
-        print_solution(pos)
-        return True  
-
-    for col in range(N):
-        if is_safe(pos, row, col):
-            pos[row] = col 
-            if solve_n_queens(pos, row + 1):  
-                return True
-    return False  
-def solve():
-    pos = [-1] * N  
-    if not solve_n_queens(pos, 0):
-        print("No solution exists")
+def solve(r=0, p=[-1]*8):
+    if r == 8:
+        for i in p: print(" ".join("Q" if j == i else "." for j in range(8)))
+        return True
+    for c in range(8):
+        if all(p[i] != c and abs(p[i] - c) != r - i for i in range(r)):
+            p[r] = c
+            if solve(r + 1, p): return True
 
 solve()
